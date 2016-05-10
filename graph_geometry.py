@@ -20,7 +20,7 @@ def dotproduct(P,Q):
     Dp = P[0]*Q[0] + P[1]*Q[1]
     return Dp
 
-def _detect_cross(A,B,C,D):
+def detect_cross(A,B,C,D):
     """Given Cartesian coordinates of 4 points A, B, C, D,
        return True if lines AB and CD cross."""
 
@@ -114,45 +114,6 @@ def _detect_cross(A,B,C,D):
     return False
 
 
-def test_detect_cross():
-    A = [0,0]
-    B = [2,0]
-
-    C, D = [0,-1], [1,1]
-    print "Simple cross. Detect cross?", _detect_cross(A,B,C,D)
-
-    C, D = (1,1), (2,-1)
-    print "Second Simple cross. Detect cross?", _detect_cross(A,B,C,D)
-
-    C, D = (0,0), (1,1)
-    print "Coincident points A and C.  Detect cross?", _detect_cross(A,B,C,D)
-    print "Must assume A,B,C,D are distinct nodes. i.e. NOT like edges (0,1) and (0,2)"
-
-    C, D = (1,0), (1,1)
-    print "Point C on line AB.  Detect cross?", _detect_cross(A,B,C,D)
-
-    C, D = (1,0), (3,0)
-    print "Lines AB and CD overlap.  Detect cross?", _detect_cross(A,B,C,D)
-
-    C, D = (3,0), (5,0)
-    print "Lines AB and CD lie on same line but don't touch.  Detect cross? (shouldn't)", _detect_cross(A,B,C,D)
-
-    C, D = (0,-1), (0,1)
-    print "Point A on vertical line CD.  Detect cross?", _detect_cross(A,B,C,D)
-
-    print
-
-    print "All good, now test with nx generated layout.\n"
-
-    G =nx.gnm_random_graph(10,15)
-
-    rand = nx.random_layout(G)
-    print "random layout:"
-    print rand
-
-    print "\nNumber of crosses:", count_crosses(G,rand)
-
-
 def nx_detect_crosses(G, pos):
     """Given graph G and positions 'pos',
        return list of edge pairs that cross."""
@@ -164,7 +125,7 @@ def nx_detect_crosses(G, pos):
             C = (pos[edge2[0]])
             D = (pos[edge2[1]])
 
-            if _detect_cross(A,B,C,D):
+            if detect_cross(A,B,C,D):
                 cross = (edge1,edge2)
                 crossing_edges.append(cross)
 
@@ -191,30 +152,11 @@ def count_crosses(G,pos):
                 C = (pos[edge2[0]])
                 D = (pos[edge2[1]])
 
-                if _detect_cross(A,B,C,D):
+                if detect_cross(A,B,C,D):
 #                   print "                        cross detected!!!!"
                     num_crossings += 1
 
     return num_crossings
-
-
-def test_nx_detect_crosses():
-    nodes = [0,1,2,3,4,5]
-    positions = [(0,0),(2,0),(4,0),(0,1),(2,1),(4,1)]
-    edges = [(0,1),(0,3),(0,4),(1,3),(1,4),(1,5),(2,5)]
-
-    G = nx.Graph()
-    G.add_edges_from(edges)
-    print "G nodes ",G.nodes()
-    print "G edges ", G.edges()
-    pos = {node:xy for node, xy in zip(G.nodes(),positions)}
-    print "pos dictionary ", pos
-
-    crossings = nx_detect_crosses(G, pos)
-    print "There are {} edge crossings: {}".format(len(crossings),crossings)
-    nx.draw(G,pos)
-    plt.show()
-
 
 
 ########################################################################
@@ -445,43 +387,6 @@ def total_node_on_edge_penalty(G,layout,gap_factor=0.2):
 
     return penalty
 
-#######################################################################
-#####################   Tests
-
-def test_ellipse_stuff():
-    G = nx.gnm_random_graph(10,15)
-    pos = nx.random_layout(G)
-
-    intrusion = total_ellipse_intrusion(G,pos,0.2)
-    print "Intrusion:", intrusion
-
-    nx.draw(G,pos)
-    plt.show()
-
-def test_node_on_edge_stuff():
-    G = nx.gnm_random_graph(10,15)
-    pos = nx.random_layout(G)
-
-    penalty = total_node_on_edge_penalty(G,pos,0.2)
-    print "Total node on edge penalty:", penalty
-
-    nx.draw(G,pos)
-    plt.show()
-
-
-def test_edge_length_stuff():
-    G = nx.gnm_random_graph(10,15)
-    pos = tripod_layout(G)
-
-    print pos
-    print G.edges()
-
-    for edge in G.edges():
-        print calc_edge_length(edge,pos)
-
-    print "Mean edge length as multiple of shortest edge length: ", calc_mean_min_length_ratio(G,pos)
-    print "Edge length std dev: ", calc_length_std_dev(G,pos)
-
 
 ######################################################################
 ######################   Edge Angle Stuff
@@ -519,30 +424,6 @@ def total_node_dot_products(G,layout):
         total += subtotal
 
     return total
-
-
-def test_edges_of_node():
-    G = nx.gnm_random_graph(4,6)
-    layout = nx.random_layout(G)
-
-    for node in G:
-        print node
-        node_edges = edges_of_node(node,G,layout)
-        print node_edges
-        print edge_dot_products(node_edges,layout)
-    print
-
-    nx.draw(G,layout)
-    plt.show()
-
-def test_total_dotty():
-    G = nx.gnm_random_graph(4,6)
-    layout = nx.random_layout(G)
-
-    print total_node_dot_products(G,layout)
-
-    nx.draw(G,layout)
-    plt.show()
 
 
 def edge_angles(node_edges, layout):
@@ -596,12 +477,3 @@ def avg_angle_exp(G,layout):
 
     #print "total:",total,"avg",avg
     return avg
-
-if __name__ == "__main__":
-    #test_detect_cross()
-    #test_nx_detect_crosses()
-    #test_edge_length_stuff()
-    #test_ellipse_stuff()
-    #test_node_on_edge_stuff()
-    #test_edges_of_node()
-    test_total_dotty()
