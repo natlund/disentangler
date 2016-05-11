@@ -13,12 +13,10 @@ from matplotlib import pyplot as plt
 
 def crossproduct(P,Q):
     """Cross product of vectors in R2, expressed as 2-tuples, or lists."""
-    Xp = (P[0]*Q[1]) - (P[1]*Q[0])
-    return Xp
+    return (P[0]*Q[1]) - (P[1]*Q[0])
 
 def dotproduct(P,Q):
-    Dp = P[0]*Q[0] + P[1]*Q[1]
-    return Dp
+    return P[0]*Q[0] + P[1]*Q[1]
 
 def detect_cross(A,B,C,D):
     """Given Cartesian coordinates of 4 points A, B, C, D,
@@ -30,7 +28,7 @@ def detect_cross(A,B,C,D):
     Dx, Dy = D[0], D[1]
 
     #  We assume A,B,C,D are all different nodes.
-    #  i.e. have NOT been sent edges (0,1) and (0,3)
+    #  i.e. have NOT been sent edges (A,B) and (A,C)
     #  So we can check for coincidence.
 
     if Ax == Bx and Ay == By: print "Coincidence"; return True
@@ -115,19 +113,25 @@ def detect_cross(A,B,C,D):
 
 
 def nx_detect_crosses(G, pos):
+    return find_crossing_edges(G, pos)
+
+def find_crossing_edges(G, pos):
     """Given graph G and positions 'pos',
        return list of edge pairs that cross."""
     crossing_edges = []
     for i, edge1 in enumerate(G.edges()):
         for edge2 in G.edges()[i+1:]:
-            A = (pos[edge1[0]])
-            B = (pos[edge1[1]])
-            C = (pos[edge2[0]])
-            D = (pos[edge2[1]])
-
-            if detect_cross(A,B,C,D):
-                cross = (edge1,edge2)
-                crossing_edges.append(cross)
+            if edge1[0] in edge2 or edge1[1] in edge2:
+                pass
+            else:
+                A = (pos[edge1[0]])
+                B = (pos[edge1[1]])
+                C = (pos[edge2[0]])
+                D = (pos[edge2[1]])
+    
+                if detect_cross(A,B,C,D):
+                    cross = (edge1,edge2)
+                    crossing_edges.append(cross)
 
     return crossing_edges
 
