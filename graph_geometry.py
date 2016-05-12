@@ -481,3 +481,25 @@ def avg_angle_exp(G,layout):
 
     #print "total:",total,"avg",avg
     return avg
+
+
+def total_node_cosines(node_edges, layout):
+    total = 0
+    
+    for i, edge1 in enumerate(node_edges):
+        for edge2 in node_edges[i+1:]:
+            cosine = edge_cosine(edge1,edge2,layout)
+            total += cosine
+    
+    return total
+
+
+def total_cosines(G, layout):
+    total = 0
+    
+    for node in G:
+        node_edges = edges_of_node(node, G, layout)
+        node_cosines =  total_node_cosines(node_edges, layout)
+        total += node_cosines
+        
+    return total
