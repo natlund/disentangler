@@ -66,17 +66,18 @@ class TestGraphGeometry(unittest.TestCase):
         G = nx.Graph()
         G.add_edges_from(edges)
         pos = {node:xy for node, xy in zip(G.nodes(),positions)}
-        print "G nodes ",G.nodes()
-        print "G edges ", G.edges()
-        print "pos dictionary ", pos
 
         crossings = find_crossing_edges(G, pos)
         self.assertIsInstance(crossings, list)
         self.assertIsInstance(crossings[0], tuple)
         self.assertEqual(1, len(crossings))
-        print "There are {} edge crossings: {}".format(len(crossings),crossings)
-        nx.draw(G,pos)
-        plt.show()
+        
+        #~ print "G nodes ",G.nodes()
+        #~ print "G edges ", G.edges()
+        #~ print "pos dictionary ", pos
+        #~ print "There are {} edge crossings: {}".format(len(crossings),crossings)
+        #~ nx.draw(G,pos)
+        #~ plt.show()
 
 
     def test_ellipse_stuff(self):
@@ -88,6 +89,7 @@ class TestGraphGeometry(unittest.TestCase):
 
         nx.draw(G,pos)
         plt.show()
+        print '\n ############################### \n'
 
     def test_node_on_edge_stuff(self):
         G = nx.gnm_random_graph(10,15)
@@ -98,6 +100,7 @@ class TestGraphGeometry(unittest.TestCase):
 
         nx.draw(G,pos)
         plt.show()
+        print '\n ############################### \n'
 
 
     def test_edge_length_stuff(self):
@@ -112,6 +115,7 @@ class TestGraphGeometry(unittest.TestCase):
 
         print "Mean edge length as multiple of shortest edge length: ", calc_mean_min_length_ratio(G,pos)
         print "Edge length std dev: ", calc_length_std_dev(G,pos)
+        print '\n ############################### \n'
 
 
     def test_edges_of_node(self):
@@ -127,6 +131,7 @@ class TestGraphGeometry(unittest.TestCase):
 
         nx.draw(G,layout)
         plt.show()
+        print '\n ############################### \n'
 
     def test_total_node_dot_products(self):
         G = nx.gnm_random_graph(4,6)
@@ -136,6 +141,7 @@ class TestGraphGeometry(unittest.TestCase):
 
         nx.draw(G,layout)
         plt.show()
+        print '\n ############################### \n'
 
 
 if __name__ == '__main__':
