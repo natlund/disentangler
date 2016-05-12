@@ -289,7 +289,7 @@ def fitness_filter(G,pool):
 
     return winner, fitness
 
-def filter_by(indices,pool,function):
+def filter_by(G, indices,pool,function):
     """Take pool members indexed by 'indices'
     Apply 'function' to those members.  For the members with
     the lowest value of 'function',
@@ -326,7 +326,7 @@ def fitness_filterer(G,pool):
 
     for function in metric_functions:
 
-        winners = filter_by(indices, pool, function)
+        winners = filter_by(G, indices, pool, function)
         indices, fitness_matrix = fitness_fiddler(winners, fitness_matrix)
 
         #print "indices:",indices
@@ -380,64 +380,65 @@ def evolve_asexually(G,seed,gens=100):
 
 
 #############################################   Main Bit
-
-size = 8
-G = nx.gnm_random_graph(size,11)
-
-if True:
-    seed = nx.spring_layout(G)
-    evol = evolve_asexually(G,seed)
+if __name__ == '__main__':
+    
+    size = 8
+    G = nx.gnm_random_graph(size,11)
+    
+    if True:
+        seed = nx.spring_layout(G)
+        evol = evolve_asexually(G,seed)
 
     # Now get this working
     #new = nx.spring_layout(G,evol)
     #nx.draw(G,new)
     #plt.show()
-
-if False:  # Asexual Evolution
-    seed = nx.random_layout(G)
-    #seed = nx.circular_layout(G)
-    #seed = dis.tripod_layout(G)
-    nx.draw(G, pos=seed)
-    plt.show()
-
-    for k in range(15):
-        winner, fitness = asexual_evolve(G,seed)
-        seed = winner
-
-
-        nx.draw(G, pos=winner)
+    
+    if False:  # Asexual Evolution
+        seed = nx.random_layout(G)
+        #seed = nx.circular_layout(G)
+        #seed = dis.tripod_layout(G)
+        nx.draw(G, pos=seed)
         plt.show()
-
-        #if fitness < 1: break
-
-##    Wow!  Asexual reproduction works extremely well!
-##    But optimum results are often still ugly.
-##    Need to implement fitness criteria involving
-##    having most arc lengths of similar lengths,
-##    or having most angles not too narrow.
-
-if False:   # Sexual Reproduction
-    seed1 = nx.random_layout(G)
-    seed2 = nx.random_layout(G)
-    #seed2 = dis.tripod_layout(G)
-
-    nx.draw(G, pos=seed1)
-    plt.show()
-    nx.draw(G, pos=seed2)
-    plt.show()
-
-
-    for k in range(10):
-        winner = evolve(seed1,seed2)
-
-        nx.draw(G, pos=winner)
+    
+        for k in range(15):
+            winner, fitness = asexual_evolve(G,seed)
+            seed = winner
+    
+    
+            nx.draw(G, pos=winner)
+            plt.show()
+    
+            #if fitness < 1: break
+    
+    ##    Wow!  Asexual reproduction works extremely well!
+    ##    But optimum results are often still ugly.
+    ##    Need to implement fitness criteria involving
+    ##    having most arc lengths of similar lengths,
+    ##    or having most angles not too narrow.
+    
+    if False:   # Sexual Reproduction
+        seed1 = nx.random_layout(G)
+        seed2 = nx.random_layout(G)
+        #seed2 = dis.tripod_layout(G)
+    
+        nx.draw(G, pos=seed1)
         plt.show()
-
-# Works.  But can find optimum solution then get worse!
-# This is due to pair breeding -- the inferior parent pollutes the genes.
-
-## Works.  But gets stuck in local minimum.  No mutation yet.
-## Winner take all breeding -- only best pair get to breed.
+        nx.draw(G, pos=seed2)
+        plt.show()
+    
+    
+        for k in range(10):
+            winner = evolve(seed1,seed2)
+    
+            nx.draw(G, pos=winner)
+            plt.show()
+    
+    # Works.  But can find optimum solution then get worse!
+    # This is due to pair breeding -- the inferior parent pollutes the genes.
+    
+    ## Works.  But gets stuck in local minimum.  No mutation yet.
+    ## Winner take all breeding -- only best pair get to breed.
 
 
 ##########################################  Testing
