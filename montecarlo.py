@@ -45,7 +45,7 @@ def montecarlo(G, seed, fitness_function, break_function, mutation_rate=0.1, n=1
                 new_layout[node] = random.random(), random.random()
                 
         fitness = fitness_function(G, new_layout)
-        print 'Iterated, fitness is now:', fitness
+        #print 'Iterated, fitness is now:', fitness
         
         if fitness < best_fitness: # Improvement in fitness
             layout = new_layout
@@ -61,7 +61,10 @@ def montecarlo(G, seed, fitness_function, break_function, mutation_rate=0.1, n=1
         
         
 def calc_fitness(G, layout):
-    return count_crosses(G, layout), total_node_on_edge_penalty(G, layout, 0.2)
+    v1 = count_crosses(G, layout)
+    v2 = total_node_on_edge_penalty(G, layout, 0.2)
+    v3 = total_cosines(G, layout)  # Fast, but not ideal. Makes triangles pointier.
+    return v1, v2, v3
 
 
 def no_crosses(fitness):
