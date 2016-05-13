@@ -503,3 +503,28 @@ def total_cosines(G, layout):
         total += node_cosines
         
     return total
+    
+    
+def total_node_cosine_factors(node_edges, layout):
+    total = 0.0
+    
+    for i, edge1 in enumerate(node_edges):
+        for edge2 in node_edges[i+1:]:
+            cosine = edge_cosine(edge1,edge2,layout)
+            cosine_factor = 1.0/(1.1 - cosine) - 0.476190
+            total += cosine_factor
+    
+    return total
+
+
+def total_cosine_factors(G, layout):
+    total = 0.0
+    
+    for node in G:
+        node_edges = edges_of_node(node, G, layout)
+        node_cosine_factors =  total_node_cosine_factors(node_edges, layout)
+        total += node_cosine_factors
+        
+    return total
+
+
