@@ -1,6 +1,7 @@
 #!usr/bin/python
 
 import networkx as nx
+from montecarlo import run_simulation
 from evol_nx_layout import evolve_asexually
 
 """
@@ -26,10 +27,12 @@ The best approach discovered so far is an essentially random approach -
 move nodes around at random and see if it makes it better.  This started
 out as a genetic algorithm, with sexual reproduction, and a fitness function.
 It was discovered that ASEXUAL reproduction gave better results.
-An asexual reproduction algorithm is almost certainly equivalent to some 
-kind of Montecarlo algorithm.  Therefore, the current best algorithm will
-be replicated in new Montecarlo algorithm, which should be much simpler
-without all the inherited machinery for genetic algorithms.
+An asexual reproduction algorithm ought to be equivalent to some 
+kind of Montecarlo algorithm.  
+
+Therefore, the latest learnings have been incorporated into a simple
+Montecarlo algorithm.  It behaves the same as the asexual genetic algoritm,
+but is vastly simpler, not needing all the genetics framework.
 """
 
 def elegant_layout(G):
@@ -38,7 +41,7 @@ def elegant_layout(G):
     '''
     seed = nx.spring_layout(G)
     
-    return evolve_asexually(G,seed)
+    return run_simulation(G,seed)
     
     
 def elegantify_layout(G, seed):
@@ -46,13 +49,25 @@ def elegantify_layout(G, seed):
     Given networkx graph G and a layout, attempt to find an improvement
     to the layout and return it.
     '''
-    return evolve_asexually(G,seed)
+    return run_simulation(G,seed)
     
     
 def demo():
     '''
     Run a demo showing how a random, ugly network graph evolves into
     a much nicer-looking graph.
+    '''
+    size = 8
+    G = nx.gnm_random_graph(size,11)
+    seed = nx.spring_layout(G)
+    evol = run_simulation(G,seed)
+    
+    
+def demo_evolution():
+    '''
+    Run a demo showing how a random, ugly network graph evolves into
+    a much nicer-looking graph, using an asexually-reproducing
+    evolutionary algorithm.
     '''
     size = 8
     G = nx.gnm_random_graph(size,11)
