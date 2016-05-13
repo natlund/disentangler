@@ -21,6 +21,8 @@ def run_simulation(G, seed, k=500):
     nx.draw(G, layout)
     plt.show()
     
+    return layout
+    
     
 def montecarlo(G, seed, fitness_function, break_function, mutation_rate=0.1, n=10):
     
